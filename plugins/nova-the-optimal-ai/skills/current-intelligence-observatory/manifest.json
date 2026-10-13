@@ -1,7 +1,7 @@
 {
   "name": "current-intelligence-observatory",
   "product_name": "Current Intelligence Observatory",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "category": "Evidence-Preserving Current Intelligence Workbench",
   "format": "cd-augment-skill/v1",
   "entrypoint": "SKILL.md",
@@ -19,6 +19,12 @@
   "optional_osint_bridge": "scripts/osint_bridge.py",
   "optional_osint_setup": "scripts/setup_osint.py",
   "optional_osint_setup_guide": "knowledge/osint-setup.md",
-  "license": "Nova Free 3.8.1 public split license; see the containing product LICENSE.md",
-  "rights_status": "public-inclusion-authorized-for-nova-free-3.8.1"
+  "optional_runtime_dependencies": [
+    "uv",
+    "separately installed Python environments and pinned OSINT tool dependencies"
+  ],
+  "delta_format": "cd-observatory-delta/v2",
+  "qualification": "Bounded native and Windows Edge fixture evidence; no live provider or model/participant qualification",
+  "license": "Nova Free 4.0.0 public split license; see the containing product LICENSE.md",
+  "rights_status": "public-inclusion-authorized-for-nova-free-4.0.0"
 }

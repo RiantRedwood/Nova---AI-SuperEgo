@@ -10,15 +10,20 @@ ROOT=Path(__file__).resolve().parent
 RUNTIME_FILES = [ROOT/name for name in ("host.py", "launch_runtime.py", "index.html", "desk.json", "sample.json")]
 RUNTIME_FILES += [ROOT.parent/"scripts/validate_case_file.py", ROOT.parent/"schemas/it-case.schema.json"]
 RUNTIME_FILES += sorted((ROOT/"assets").glob("*-surface.png"))
+RUNTIME_FILES += [ROOT/"assets"/name for name in ("beryl-icon.png", "beryl.ico", "beryl.icns")]
 RUNTIME_SHA=hashlib.sha256(b"".join(p.name.encode()+b"\0"+p.read_bytes() for p in RUNTIME_FILES)).hexdigest()
 CONFIG=json.loads((ROOT/'desk.json').read_text(encoding='utf-8'))
 TOKEN=secrets.token_urlsafe(32)
+sys.path.insert(0, str(ROOT.parent / "scripts"))
+from validate_case_file import validate_data, consistency_issues, load_json
+
 def validate_record(record):
-    if not isinstance(record,dict): return ['Native document must be a JSON object.']
-    with tempfile.TemporaryDirectory(prefix='native-desk-validation-') as tmp:
-        path=Path(tmp)/'record.json'; path.write_text(json.dumps(record,ensure_ascii=False),encoding='utf-8')
-        result=subprocess.run([sys.executable,'-B',str(ROOT.parent/'scripts'/CONFIG['validator']),str(path)],capture_output=True,text=True,encoding='utf-8',timeout=20)
-        return [] if result.returncode==0 else [(result.stdout+result.stderr).strip() or 'Validator failed.']
+    try:
+        validate_data(record)
+        return []
+    except (ValueError, RecursionError) as exc:
+        return [str(exc)]
+
 class Handler(BaseHTTPRequestHandler):
     def log_message(self,*args): pass
     def reply(self,status,value,json_value=True):
@@ -36,6 +41,9 @@ class Handler(BaseHTTPRequestHandler):
         if self.headers.get('Host')!=f'127.0.0.1:{self.server.server_port}': return self.reply(403,{'error':'Unexpected host'})
         if self.path=='/api/health': return self.reply(200,{'product':CONFIG['id'],'version':CONFIG['version'],'workspace':str(ROOT),'mode':'native-file preparation; no persistent record store','runtime_sha256':RUNTIME_SHA,'instance':RUNTIME_NONCE})
         if self.path=='/': return self.reply(200,(ROOT/'index.html').read_bytes(),False)
+        icons={'/assets/beryl-icon.png':'image/png','/assets/beryl.ico':'image/x-icon','/assets/beryl.icns':'image/icns'}
+        if self.path in icons:
+            raw=(ROOT/self.path.lstrip('/')).read_bytes();self.send_response(200);self.send_header('Content-Type',icons[self.path]);self.send_header('X-Content-Type-Options','nosniff');self.send_header('Cache-Control','no-cache');self.send_header('Content-Length',str(len(raw)));self.end_headers();self.wfile.write(raw);return
         if self.path in ('/assets/moss-surface.png','/assets/night-surface.png','/assets/porcelain-surface.png'):
             raw=(ROOT/self.path.lstrip('/')).read_bytes()
             self.send_response(200);self.send_header('Content-Type','image/png');self.send_header('X-Content-Type-Options','nosniff');self.send_header('Cache-Control','no-cache');self.send_header('Content-Length',str(len(raw)));self.end_headers();self.wfile.write(raw);return
@@ -50,10 +58,10 @@ class Handler(BaseHTTPRequestHandler):
         try:
             size=int(self.headers.get('Content-Length','0'))
             if size<1 or size>2_000_000: return self.reply(413,{'error':'Native JSON must be under 2 MB'})
-            data=json.loads(self.rfile.read(size))
+            data=load_json(self.rfile.read(size))
             if self.path!='/api/validate': return self.reply(404,{'error':'No mutation endpoint exists'})
-            errors=validate_record(data); self.reply(200,{'valid':not errors,'errors':errors,'scope':'Existing native structural validator only; no semantic truth, execution, approval or repair claim.'})
-        except (ValueError,OSError,subprocess.SubprocessError) as error: self.reply(400,{'error':str(error)})
+            errors=validate_record(data); self.reply(200,{'valid':not errors,'errors':errors,'consistency_issues':consistency_issues(data) if not errors else [],'scope':'Structure and bounded declared consistency only; no truth, execution, approval or repair claim.'})
+        except (ValueError,OSError,subprocess.SubprocessError,RecursionError) as error: self.reply(400,{'error':str(error)})
 def main():
     parser=argparse.ArgumentParser(); parser.add_argument('--no-browser',action='store_true'); parser.add_argument('--port',type=int,default=CONFIG['port']); parser.add_argument('--check',action='store_true'); parser.add_argument('--serve',action='store_true',help=argparse.SUPPRESS); args=parser.parse_args()
     if args.check:

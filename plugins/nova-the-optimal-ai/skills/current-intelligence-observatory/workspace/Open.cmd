@@ -1,2 +1,4 @@
-@echo off
-start "" "%~dp0index.html"
+@echo off
+
+start "" "%~dp0index.html"
+

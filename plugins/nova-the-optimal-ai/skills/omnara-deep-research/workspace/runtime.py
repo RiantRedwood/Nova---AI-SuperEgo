@@ -5,15 +5,8 @@ from contextlib import contextmanager
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-def atomic(path, content):
-    path = Path(path); path.parent.mkdir(parents=True, exist_ok=True)
-    temp = path.with_name(path.name + '.' + secrets.token_hex(6) + '.tmp')
-    try:
-        with temp.open('wb') as f:
-            f.write(content if isinstance(content, bytes) else content.encode('utf-8')); f.flush(); os.fsync(f.fileno())
-        os.replace(temp, path)
-    finally:
-        temp.unlink(missing_ok=True)
+from file_ops import atomic
+from custody import reject_links
 
 @contextmanager
 def launch_lock(path):
@@ -40,7 +33,7 @@ def launch(product, default_name, adapter, static):
     parser.add_argument('--no-browser', action='store_true')
     parser.add_argument('--port', type=int, default=0)
     args = parser.parse_args()
-    root = (args.data_root or Path(os.environ.get(product.upper().replace('-','_')+'_HOME', str(Path.home()/'Documents'/default_name)))).resolve()
+    root = reject_links(args.data_root or Path(os.environ.get(product.upper().replace('-','_')+'_HOME', str(Path.home()/'Documents'/default_name))))
     root.mkdir(parents=True, exist_ok=True)
     source = Path(__file__).resolve().parent
     identity = hashlib.sha256((product+'\n'+str(source)+'\n'+str(root)).encode()).hexdigest()
@@ -93,8 +86,10 @@ def launch(product, default_name, adapter, static):
                 if not secrets.compare_digest(self.headers.get('X-Workspace-Token',''),token): return self.respond(403,{'error':'Open the workspace through its launcher'})
                 try:
                     length=int(self.headers.get('Content-Length','0'))
-                    if length>16*1024*1024: raise ValueError('Request exceeds 16 MB')
-                    data=json.loads(self.rfile.read(length)) if length else {}
+                    if length<0 or length>16*1024*1024: raise ValueError('Request exceeds 16 MB')
+                    from evidence_contract import loads
+                    data=loads(self.rfile.read(length).decode('utf-8')) if length else {}
+                    if not isinstance(data,dict):raise ValueError('Request body must be an object')
                     result=app.request(self.command,path,data)
                     if isinstance(result, tuple): return self.respond(200,*result)
                     self.respond(200,result)
@@ -106,10 +101,13 @@ def launch(product, default_name, adapter, static):
             files={'/':'index.html','/app.js':'app.js','/style.css':'style.css','/skins.css':'skins.css',
                    '/assets/tracework.png':'assets/tracework.png',
                    '/assets/survey-folio.png':'assets/survey-folio.png',
-                   '/assets/proof-cabinet.png':'assets/proof-cabinet.png'}
+                   '/assets/proof-cabinet.png':'assets/proof-cabinet.png',
+                   '/favicon.ico':'assets/omnara.ico','/assets/omnara.ico':'assets/omnara.ico',
+                   '/assets/omnara-icon.png':'assets/omnara-icon.png'}
             if path not in files: return self.respond(404,{'error':'Not found'})
             mime={'index.html':'text/html; charset=utf-8','app.js':'text/javascript; charset=utf-8',
-                  'style.css':'text/css; charset=utf-8','skins.css':'text/css; charset=utf-8'}
+                  'style.css':'text/css; charset=utf-8','skins.css':'text/css; charset=utf-8',
+                  'assets/omnara.ico':'image/x-icon'}
             file=files[path]
             self.respond(200,(static/file).read_bytes(),mime.get(file,'image/png'))
         do_GET=handle_request

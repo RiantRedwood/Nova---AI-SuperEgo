@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <title>Observatory Case · Current Intelligence Observatory</title>
+  <link rel="icon" type="image/png" href="observatory-icon.png">
+  <link rel="apple-touch-icon" href="observatory-icon.png">
   <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="refinement.css"></head>
 <body data-skin="night">
@@ -16,7 +18,8 @@
         <div><p class="brand-kicker">Nova / Current Intelligence Observatory</p><p class="brand-name">Observatory<span> · Evidence Atlas</span></p></div>
       </div>
       <div class="header-controls">
-        <label class="theme-control" for="skin"><span>Environment</span><select id="skin"><option value="night">Signal room</option><option value="paper">Evidence folio</option></select></label>
+        <button id="home" type="button">Home</button><a href="guide.html" target="_blank" rel="noopener">Help</a>
+        <label class="theme-control" for="skin"><span>Environment</span><select id="skin"><option value="night">Signal room</option><option value="paper">Evidence folio</option><option value="light">Daylight</option></select></label>
         <details class="case-controls" id="case-controls">
           <summary>Investigation files <span aria-hidden="true">↗</span></summary>
           <div class="case-menu">
@@ -36,6 +39,7 @@
     <footer class="app-footer"><span>OBS / READ ONLY</span><p>Native records keep their status, confidence, uncertainty and provenance. A structural difference is not evidence of material change.</p></footer>
   </div>
   <script src="sample.js"></script>
+  <script src="case-input.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

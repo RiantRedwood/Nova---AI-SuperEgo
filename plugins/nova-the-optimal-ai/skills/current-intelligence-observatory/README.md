@@ -1,9 +1,7 @@
 # Current Intelligence Observatory
 
-Follow what changed. Keep what it means honest.
+Bring one question and the sources you have. Start with [the skill](SKILL.md), or open [Evidence Atlas](workspace/index.html) and explore [the fictional inquiry](examples/harbor-lantern/demonstration.md). The useful result is a bounded answer with exact support, uncertainty and a clear return point when work remains.
 
-This skill turns developing public-source questions into resumable evidence cases. It preserves captures, separates observations from claims and inferences, challenges rival explanations, compares a frozen baseline with later state, and projects the same case into a ledger, graph, timeline, map, dossier, or brief without upgrading certainty.
+[Native case operations](knowledge/native-case-guide.md) explain capture, file integrity, typed evidence, honest deltas and review bindings. [Reviewed investigative practice](knowledge/investigative-practice.md) adapts the preserved research without importing its overclaims. [Optional OSINT](knowledge/osint-tools.md) is needed only when a bounded tool query advances the question.
 
-Start with `SKILL.md`. The complete synthetic proof is in `examples/harbor-lantern/`. Run `python -X utf8 scripts/self_check.py` for bounded static integrity and `python -X utf8 -m unittest discover -s scripts/tests -v` for deterministic guardrail tests.
-
-The scripts do not establish truth, identity, source credibility, causation, legality, safety, accessibility conformance, or publication approval. The product does not crawl, archive, schedule, monitor, contact, or publish unless the host has that capability and the user separately authorizes it.
+Run `python scripts/self_check.py` for static package integrity, or `python -m unittest discover -s scripts/tests -v` for bounded native fixture checks. These are not model trials, participant studies, provider accuracy tests, source credibility judgments or publication authority.

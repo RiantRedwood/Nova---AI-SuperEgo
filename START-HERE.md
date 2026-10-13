@@ -1,6 +1,6 @@
 # Install Nova the Optimal AI Free
 
-Nova the Optimal AI Free 3.8.1 is one product and one plugin. Install it on your chosen harness, start a fresh task and ask Nova for one useful piece of work. Ordinary use needs no local model, embedding service, vector database, prompt hook, daemon or persistent estate.
+Nova the Optimal AI Free 4.0.0 is one product and one plugin. Install it on your chosen harness, start a fresh task and ask Nova for one useful piece of work. Ordinary use needs no local model, embedding service, vector database, prompt hook, daemon or persistent estate.
 
 The edition contains twenty-eight native skills and seventeen nested Faculty Cores. MIND is Nova's cognitive architecture, not another product to install. Optional workspaces and persistent services can be opened when their working objects help; they do not precede your first conversation.
 
@@ -10,7 +10,7 @@ Your first useful result can be a conversation, document or decision. If you alr
 
 Attach the complete customer ZIP on the harness where Nova should run and say:
 
-    Install Nova the Optimal AI Free as one complete edition. Preserve my existing plugins, skills, tools, connectors, project instructions, and data. Ask before replacing or disabling another governing Nova installation. Do not configure persistent state unless I separately request it.
+    Install Nova the Optimal AI Free as one complete edition. Preserve my existing plugins, skills, tools, connectors, project instructions, and data. Resolve another governing Nova installation before replacement; use existing exact replacement authority, or ask when that choice has not been made. Do not configure persistent state unless I separately request it.
 
 Installation authorizes package installation on that harness. It does not authorize data import, account changes, messages, purchases, publication, a local model, background services, or persistent Nova data.
 
@@ -22,7 +22,7 @@ Extract the customer ZIP to a stable local folder. Add its codex directory as a 
     codex plugin add nova-the-optimal-ai --marketplace collaborative-dynamics-nova-free --json
     codex plugin list --json
 
-Use the path syntax expected by the operating system and shell. Restart the desktop host or open a new task after changing plugin state so the native catalog can refresh.
+Use the path syntax expected by the operating system and shell. Confirm the intended installed version and enabled state. Restart the desktop host and open a new task after changing plugin state so the native catalog can refresh. If the old version remains installed, follow the update procedure in [the upgrade guide](docs/UPGRADE.md); changing extracted files alone is not an installed-plugin refresh.
 
 Confirm with a real invocation:
 
@@ -44,7 +44,7 @@ Python 3.10 or newer must already be available for deterministic persistent serv
 
 ## Upgrade from Free 2.x
 
-Free 2.x used two plugins, a prompt hook, an Ollama embedding model, a vector database, and forty-one visible handles. The old and new Nova front doors share the `nova-the-optimal-ai` plugin ID: extracting 3.8.1 beside 2.x is safe staging, but installing it replaces that plugin binding rather than creating a side-by-side active Nova. Preserve the old package and configuration for rollback before approving replacement. Free 3.8.1 does not mutate the old database or uninstall Ollama. Ask before disabling another Nova or MIND source. Preserve any Continuity data and decide separately whether obsolete hook, database, model, or plugin artifacts should be removed.
+Free 2.x used two plugins, a prompt hook, an Ollama embedding model, a vector database, and forty-one visible handles. The old and new Nova front doors share the `nova-the-optimal-ai` plugin ID: extracting 4.0.0 beside 2.x is safe staging, but installing it replaces that plugin binding rather than creating a side-by-side active Nova. Preserve the old package and configuration for rollback before approving replacement. Free 4.0.0 does not mutate the old database or uninstall Ollama. Ask before disabling another Nova or MIND source. Preserve any Continuity data and decide separately whether obsolete hook, database, model, or plugin artifacts should be removed.
 
 Continue with the [upgrade guide](docs/UPGRADE.md) and [troubleshooting guide](docs/TROUBLESHOOTING.md).
 

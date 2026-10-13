@@ -31,3 +31,9 @@ If another Nova or MIND is installed, stop before replacement. Record its select
 ## Verification mismatch
 
 If you have the source repository, rebuild and rerun `tools/verify_package.py` against the extracted package directory. The extracted customer package is not a buildable source checkout; without the repository, compare the supplied archive digest and `SHA256SUMS.txt`, preserve the failing artifact, and report the mismatch. A static PASS does not settle fresh-host behavior. Preserve the failing artifact and digest instead of editing a built ZIP in place.
+
+## Scope or root conflict
+
+Keep the exact diagnostic. User and agent scope selectors are exact: `Nova` and `nova` can name different scopes. A `scope_denied` result does not establish an empty or lost store. Use the identity recorded by the owner.
+
+For `nova_root_mismatch`, inspect the estate locator, registry and caller launch context read-only. Use the registry-backed Nova Operations route; a direct caller must be launched with the selected registry's values. Correct only the authorized caller context, without globally changing environment settings or initializing another estate. A timeline occurrence and represented project state are different: a project-resumption view may accurately report `project_scope_unrepresented` while returning retained events. Do not turn an event into a completion or project-state claim.
